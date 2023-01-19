@@ -13,17 +13,13 @@ export default function App() {
   };
 
   /* Usando state para controlar a localização */
-  const [localizacao, setLocalizacao] = useState({
-    latitude: -33.867886,
-    longitude: -63.987,
-    latitudeDelta: 10,
-    longitudeDelta: 10,
-  });
+  const [localizacao, setLocalizacao] = useState();
 
   const marcarLocal = (event) => {
     /* Spread operator isso faz com que pegamos os parâmetros passados na const anterior e podemos usá-las */
     setLocalizacao({
-      ...localizacao,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
       latitude: event.nativeEvent.coordinate.latitude,
       longitude: event.nativeEvent.coordinate.longitude,
     });
@@ -37,19 +33,18 @@ export default function App() {
         <MapView
           onPress={marcarLocal}
           style={estilos.mapa}
-          initialRegion={regiaoInicial}
+          region={localizacao ?? regiaoInicial}
           liteMode={false}
-          mapType="satellite"
+          mapType="standard"
           userInterfaceStyle="dark"
         >
-          <Marker
-            draggable
-            coordinate={localizacao}
-            title="Aqui!!!"
-            onPress={(e) => console.log(e.nativeEvent)}
-          >
-            {<Image source={require("./assets/ghost.png")} />}
-          </Marker>
+          {localizacao && (
+            <Marker
+              coordinate={localizacao}
+              title="Aqui!!!"
+              onPress={(e) => console.log(e.nativeEvent)}
+            />
+          )}
         </MapView>
       </View>
     </>
